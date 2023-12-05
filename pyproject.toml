@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ying"
+version = "0.1.0"
+description = "My personal python library for some common usage."
+authors = [{ name = "Ying Cai", email = "i@caiying.me" }]
+dependencies = []
+
+[project.optional-dependencies]
+all = ["cloud_storage_size"]
+cloud_storage_size = [
+    "google-cloud-storage",
+    "google-cloud-monitoring",
+    "boto3",
+    "azure-storage-blob",
+    "oss2",
+    "minio",
+]
