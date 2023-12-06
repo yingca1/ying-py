@@ -3,5 +3,5 @@
 ```bash
 pip install ying
 
-pip install ying[cloud_storage_size]
+pip install -U --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple "ying[cloud_storage_size]"
 ```

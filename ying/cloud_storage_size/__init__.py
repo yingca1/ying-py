@@ -26,12 +26,14 @@ def get_bucket_objects_count_and_bytes(bucket_uri, engine="auto", **kwargs):
     parsed_url = urlparse(bucket_uri)
     scheme = parsed_url.scheme
     bucket_name = parsed_url.netloc
-    blob_path = parsed_url.path.lstrip("/")
 
     def process_by_metrics():
         if scheme != "gs":
             raise ValueError("metrics only support google cloud storage")
-        return query_google_cloud_minitoring(bucket_name, blob_path)
+        if kwargs.get("project_id", None) is None:
+            raise ValueError("project_id is required")
+        project_id = kwargs.get("project_id")
+        return query_google_cloud_minitoring(project_id, bucket_name)
 
     def process_by_rclone():
         return list_object_count_and_bytes_rclone_by_env(bucket_uri)
@@ -50,6 +52,7 @@ def get_bucket_objects_count_and_bytes(bucket_uri, engine="auto", **kwargs):
         else:
             raise ValueError("unsupported scheme")
 
+    return_value = None
     if engine == "auto":
         if scheme == "gs":
             return_value = process_by_metrics()
