@@ -168,7 +168,7 @@ def list_object_count_and_bytes_rclone_by_env(bucket_uri):
         return result.returncode == 0
 
     is_rclone_installed = check_rclone_installed()
-    logger.info(f"is_rclone_installed: {is_rclone_installed}")
+    logger.info("is_rclone_installed: %s", is_rclone_installed)
     if not is_rclone_installed:
         return None
 
@@ -240,11 +240,12 @@ def list_object_count_and_bytes_rclone_by_env(bucket_uri):
             ),
         }
 
-    command = ["/opt/homebrew/bin/rclone", "size", f"myremote:{bucket_name}", "--json"]
+    command = ["rclone", "size", f"myremote:{bucket_name}", "--fast-list", "--json"]
     result = subprocess.run(command, capture_output=True, text=True, env=env)
 
     if result.returncode != 0:
-        raise Exception(f"rclone command failed: {result.stderr}")
+        logger.error("rclone command failed: %s", result.stderr)
+        return None
 
     size_info = json.loads(result.stdout)
     return size_info
@@ -277,17 +278,12 @@ def list_object_count_and_bytes_rclone_by_conn_str(bucket_uri, conn_str):
 
     scheme, bucket_name, blob_path = parse_path_uri(bucket_uri)
 
-    command = [
-        "/opt/homebrew/bin/rclone",
-        "size",
-        f"{conn_str}{bucket_name}",
-        "--fast-list",
-        "--json",
-    ]
+    command = ["rclone", "size", f"{conn_str}{bucket_name}", "--fast-list", "--json"]
     result = subprocess.run(command, capture_output=True, text=True, check=True)
 
     if result.returncode != 0:
-        raise Exception(f"rclone command failed: {result.stderr}")
+        logger.error("rclone command failed: %s", result.stderr)
+        return None
 
     size_info = json.loads(result.stdout)
     return size_info
@@ -337,14 +333,16 @@ def list_object_count_and_bytes_rclone_by_config(bucket_uri, config):
     def create_rclone_connection_string(config):
         conn_type = config.pop("type", None)
         if conn_type is None:
-            raise ValueError("The 'type' key is required in the configuration.")
+            logger.error("The 'type' key is required in the configuration.")
+            return None
 
         parts = [f"{key}={value}" for key, value in config.items()]
         connection_string = f":{conn_type}," + ",".join(parts) + ":"
         return connection_string
 
     if config is None:
-        raise ValueError("The 'config' argument is required in the configuration.")
+        logger.error("The 'config' argument is required in the configuration.")
+        return None
 
     conn_str = create_rclone_connection_string(config)
 
