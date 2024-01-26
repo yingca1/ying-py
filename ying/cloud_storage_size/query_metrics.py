@@ -1,8 +1,11 @@
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def query_google_cloud_minitoring(project_id, bucket_name):
     """query gcs bucket objects size and count
-    
+
     1. `pip install google-cloud-monitoring`
     2. `GOOGLE_APPLICATION_CREDENTIALS` must be set
 
@@ -45,6 +48,18 @@ def query_google_cloud_minitoring(project_id, bucket_name):
         }
     )
 
-    storage_bytes_value = storage_bytes.time_series[0].points[0].value.double_value
-    storage_count_value = storage_count.time_series[0].points[0].value.int64_value
+    try:
+        storage_bytes_value = storage_bytes.time_series[0].points[0].value.double_value
+    except Exception as e:
+        logger.error(
+            f"[project_id: {project_id}, bucket_name: {bucket_name}] get storage_bytes_value failed: {e}"
+        )
+        storage_bytes_value = -1
+    try:
+        storage_count_value = storage_count.time_series[0].points[0].value.int64_value
+    except Exception as e:
+        logger.error(
+            f"[project_id: {project_id}, bucket_name: {bucket_name}] get storage_count_value failed: {e}"
+        )
+        storage_count_value = -1
     return {"bytes": storage_bytes_value, "count": storage_count_value}

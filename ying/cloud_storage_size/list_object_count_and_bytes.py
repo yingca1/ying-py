@@ -1,3 +1,4 @@
+import os
 import logging
 
 logger = logging.getLogger(__name__)
@@ -104,7 +105,7 @@ def list_object_count_and_bytes_oss(bucket_name):
     auth = oss2.Auth(
         os.environ["OSS_ACCESS_KEY_ID"], os.environ["OSS_ACCESS_KEY_SECRET"]
     )
-    bucket = oss2.Bucket(auth, "oss-cn-hangzhou.aliyuncs.com", bucket_name)
+    bucket = oss2.Bucket(auth, os.environ['OSS_ENDPOINT'] or "oss-cn-hangzhou.aliyuncs.com", bucket_name)
 
     total_size = 0
     total_count = 0
@@ -240,7 +241,7 @@ def list_object_count_and_bytes_rclone_by_env(bucket_uri):
             ),
         }
 
-    command = ["rclone", "size", f"myremote:{bucket_name}", "--fast-list", "--json"]
+    command = ["/opt/homebrew/bin/rclone", "--config", "/Users/caiying/.config/rclone/rclone.conf", "size", f"myremote:{bucket_name}", "--fast-list", "--json"]
     result = subprocess.run(command, capture_output=True, text=True, env=env)
 
     if result.returncode != 0:
@@ -278,7 +279,7 @@ def list_object_count_and_bytes_rclone_by_conn_str(bucket_uri, conn_str):
 
     scheme, bucket_name, blob_path = parse_path_uri(bucket_uri)
 
-    command = ["rclone", "size", f"{conn_str}{bucket_name}", "--fast-list", "--json"]
+    command = ["/opt/homebrew/bin/rclone", "--config", "/Users/caiying/.config/rclone/rclone.conf", "size", f"{conn_str}{bucket_name}", "--fast-list", "--json"]
     result = subprocess.run(command, capture_output=True, text=True, check=True)
 
     if result.returncode != 0:
