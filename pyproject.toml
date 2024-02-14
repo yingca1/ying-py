@@ -1,12 +1,18 @@
 [tool.poetry]
 name = "ying"
-version = "0.1.2"
+version = "0.2.0"
 description = "My personal python library for some common usage."
 authors = ["Ying Cai <i@caiying.me>"]
 readme = "README.md"
 
+[tool.poetry.scripts]
+ying = "ying.cli:main"
+
 [tool.poetry.dependencies]
 python = "^3.8"
+fire = "^0.5.0"
+python-dotenv = "^1.0.1"
+dynaconf = "^3.2.4"
 google-cloud-storage = "^1.42.0"
 google-cloud-monitoring = "^2.7.0"
 boto3 = "^1.20.0"
