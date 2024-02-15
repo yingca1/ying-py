@@ -5,6 +5,7 @@ import requests
 from ying.config import settings
 import logging
 
+logging.basicConfig(level=logging.ERROR)
 logger = logging.getLogger(__name__)
 
 def send_message(chat_id, text):
@@ -21,7 +22,8 @@ def send_message(chat_id, text):
         logger.info(response_data)
     else:
         message_id = None
-        logger.error(f"Failed to send message to {chat_id}: {text}")
+        logger.info(f"Failed to send message to {chat_id}: {text}")
+        logger.info(response_data)
     return message_id
 
 
@@ -39,3 +41,4 @@ def edit_message_text(chat_id, message_id, text):
         logger.info("Message updated successfully")
     else:
         logger.info("Failed to update message")
+        logger.info(edit_response_data)
