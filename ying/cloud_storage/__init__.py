@@ -1,5 +1,5 @@
 from urllib.parse import urlparse
-from ying.cloud_storage_size.list_object_count_and_bytes import (
+from ying.cloud_storage.list_object_count_and_bytes import (
     list_object_count_and_bytes_rclone_by_env,
     list_object_count_and_bytes_az,
     list_object_count_and_bytes_s3,
@@ -7,7 +7,7 @@ from ying.cloud_storage_size.list_object_count_and_bytes import (
     list_object_count_and_bytes_minio,
     list_object_count_and_bytes_gs,
 )
-from ying.cloud_storage_size.query_metrics import query_google_cloud_minitoring
+from ying.cloud_storage.query_metrics import query_google_cloud_minitoring
 
 
 def get_bucket_objects_count_and_bytes(bucket_uri, engine="auto", **kwargs):

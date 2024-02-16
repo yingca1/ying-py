@@ -1,5 +1,5 @@
 import unittest
-from ying.cloud_storage_size import get_bucket_objects_count_and_bytes
+from ying.cloud_storage import get_bucket_objects_count_and_bytes
 
 from dotenv import load_dotenv
 

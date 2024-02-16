@@ -1,6 +1,6 @@
 import os
 import logging
-from ying.cloud_storage_size import get_bucket_objects_count_and_bytes
+from ying.cloud_storage import get_bucket_objects_count_and_bytes
 from cloud_sheets_slim import CloudSheetsSlim
 from ying.utils import formatter
 import config
